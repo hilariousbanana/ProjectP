@@ -15,60 +15,63 @@ public enum HandRank
 	RoyalFlush,
 }
 
-public class HandEvaluator
+public partial class HandEvaluator
 {
 	public static HandRank EvaluateHand( Hand hand, Board board )
 	{
 		List<Card> cards = new List<Card>();
-		cards.AddRange( hand.Cards );
-		cards.AddRange( board.Cards );
+		cards.AddRange(hand.Cards);
+		cards.AddRange(board.Cards);
 
-		return DetermineBestHand( cards );
+		return DetermineBestHand(cards);
 	}
 
 	private static HandRank DetermineBestHand( List<Card> cards )
 	{
-		var rankDict = GetRankCount( cards );
-		var suitDict = GetSuitCount( cards );
+		var rankDict = GetRankCount(cards);
+		var suitDict = GetSuitCount(cards);
 
-		bool isStraight = IsStraight( rankDict );
-		bool isFlush = IsFlush( suitDict );
+		bool isStraight = IsStraight(rankDict);
+		bool isFlush = IsFlush(suitDict);
 
 		int quads = 0, trips = 0, pairs = 0;
-		foreach( var cnt in rankDict.Values )
+		foreach (var cnt in rankDict.Values)
 		{
-			if( cnt == 4 ) quads++;
-			else if( cnt == 3) trips++;
-			else if( cnt == 2 ) pairs++;
+			if (cnt == 4) quads++;
+			else if (cnt == 3) trips++;
+			else if (cnt == 2) pairs++;
 		}
 
 		//1.스트레이트 플러쉬
-		if ( isStraight && isFlush )
+		if (isStraight && isFlush)
 			return HandRank.StraightFlush;
-        //2.포카드
-        if ( quads > 0 )
+		//2.포카드
+		if (quads > 0)
 			return HandRank.FourOfAKind;
 		//3.풀하우스
-		if ( trips > 0 && ( pairs > 0 || trips > 1 ) )
+		if (trips > 0 && (pairs > 0 || trips > 1))
 			return HandRank.FullHouse;
 		//4.플러쉬
-		if ( isFlush )
+		if (isFlush)
 			return HandRank.Flush;
-        //5.스트레이트
-        if ( isStraight)
-            return HandRank.Straight;
-        //6.트리플
-        if ( trips > 0)
-            return HandRank.ThreeOfAKind;
-        //7.페어
-		if( pairs == 2 )
+		//5.스트레이트
+		if (isStraight)
+			return HandRank.Straight;
+		//6.트리플
+		if (trips > 0)
+			return HandRank.ThreeOfAKind;
+		//7.페어
+		if (pairs == 2)
 			return HandRank.TwoPair;
-		if( pairs == 1 )
+		if (pairs == 1)
 			return HandRank.OnePair;
 
 		return HandRank.HighCard;
 	}
+}
 
+public partial class HandEvaluator
+{ 
 	private static Dictionary<Rank, int> GetRankCount( List<Card> cards )
 	{
 		var rankDict = new Dictionary<Rank, int>();
@@ -94,10 +97,6 @@ public class HandEvaluator
 		return suitDict;
     }
 
-	private static int GetMatchingRankCount( Dictionary<Rank, int> rankDict, int targetCnt )
-	{
-		return rankDict.Values.Count( val=> val == targetCnt );
-    }
 	private static bool IsFlush( Dictionary<Suit, int> suitDict )
 	{
 		return suitDict.Values.Any( val=> val >= 5 );
