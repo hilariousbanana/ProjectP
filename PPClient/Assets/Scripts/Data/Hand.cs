@@ -4,11 +4,17 @@ using System.Collections.ObjectModel;
 
 public class Hand
 {
+	public int ID
+	{
+		get;
+		private set;
+	}
 	private readonly Card[] _cards = new Card[2];
 	public ReadOnlyCollection<Card> Cards => Array.AsReadOnly( _cards );
 
-	public Hand( Card card1, Card card2 )
+	public Hand( int id, Card card1, Card card2 )
 	{
+		ID = id;
 		_cards[0] = card1;
 		_cards[1] = card2;
 	}
@@ -19,6 +25,6 @@ public class Hand
 	}
 	public override string ToString()
 	{
-		return $"Hand: {string.Join( ", ", Cards )}";
+		return $"<color=skyblue>[ Hand ]</color> ID: {ID} Hands: {string.Join( ", ", Cards )}";
 	}
 }
