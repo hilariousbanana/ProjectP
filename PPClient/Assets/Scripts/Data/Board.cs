@@ -23,6 +23,6 @@ public class Board
 	}
 	public override string ToString()
 	{
-		return $"Board: {string.Join( ", ", _cards )}";
+		return $" <color=yellow>[ Board ]</color> Cards: {string.Join( ", ", _cards )}";
 	}
 }
