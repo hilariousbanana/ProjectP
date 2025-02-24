@@ -17,16 +17,17 @@ public enum HandRank
 
 public partial class HandEvaluator
 {
-	public static HandRank EvaluateHand( Hand hand, Board board )
+	public static HandStrength EvaluateHand( Hand hand, Board board )
 	{
 		List<Card> cards = new List<Card>();
 		cards.AddRange( hand.Cards );
 		cards.AddRange( board.Cards );
 
-		return DetermineBestHand( cards );
+		HandRank rank = DetermineBestHand( cards, out Rank mainCard, out List<Card> kickers );
+		return new HandStrength( rank, mainCard, kickers );
 	}
 
-	private static HandRank DetermineBestHand( List<Card> cards )
+	private static HandRank DetermineBestHand( List<Card> cards, out Rank mainCard, out List<Card> kickers )
 	{
 		var rankDict = GetRankCount(cards);
 		var suitDict = GetSuitCount(cards);
@@ -41,6 +42,9 @@ public partial class HandEvaluator
 			else if( cnt == 3 ) trips++;
 			else if( cnt == 2 ) pairs++;
 		}
+
+		mainCard = Rank.Two;
+		kickers = new List<Card>();
 
 		//1.스트레이트 플러쉬
 		if( isStraight && isFlush )

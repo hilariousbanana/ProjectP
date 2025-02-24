@@ -8,7 +8,7 @@ public class Tester : MonoBehaviour
 	private List<Card> cards = new List<Card>();
 	private List<Hand> hands = new List<Hand>();
 	private Board board = new Board();
-	private Dictionary<int, HandRank> result = new Dictionary < int, HandRank >();
+	private Dictionary<int, HandStrength> result = new Dictionary < int, HandStrength >();
 
 	private void Start()
 	{
@@ -35,7 +35,7 @@ public class Tester : MonoBehaviour
 				Debug.Log( $"Player {entry.Key}: {entry.Value}" );
 			}
 
-			Debug.Log( $"[{this}]" );
+			Debug.Log( $"<color=green>[ Result ]</color> Participants: {hands.Count} \n Best Hand: {sortedResults.First().Value}");
 		}
 	}
 
