@@ -103,24 +103,28 @@ public partial class HandEvaluator
 	}
 	private static bool IsStraight( Dictionary<Rank, int> rankDict )
 	{
-		if( IsLowStratight( rankDict ) )
+		if( IsLowStratight( rankDict ) || IsCircularStraight( rankDict ) )
 			return true;
 
-		int stack = 0;
-		Rank prevRank = rankDict.Keys.OrderBy( val=> val ).First();
+		// Rank 키를 정렬하여 리스트로 변환
+		List<int> ranks = rankDict.Keys
+		.Select(rank => (int)rank)
+		.OrderBy(r => r)
+		.ToList();
 
-		foreach( var rank in rankDict.Keys )
+		// 연속된 숫자가 5개 이상인지 확인 (최적화된 방식)
+		int stack = 0;
+		for( int i = 1; i < ranks.Count; i++ )
 		{
-			if( prevRank + 1 == rank )
+			if( ranks[i] == ranks[i - 1] + 1 )
 				stack++;
 			else
-				stack = 0;
-
-			prevRank = rank;
+				stack = 0; // 연속이 끊기면 초기화
 
 			if( stack >= 4 )
 				return true;
 		}
+
 		return false;
 	}
 	private static bool IsLowStratight( Dictionary<Rank, int> rankDict )
@@ -130,5 +134,21 @@ public partial class HandEvaluator
 			&& rankDict.ContainsKey( Rank.Three )
 			&& rankDict.ContainsKey( Rank.Four )
 			&& rankDict.ContainsKey( Rank.Five );
+	}
+	private static bool IsCircularStraight( Dictionary <Rank, int> rankDict )
+	{
+		int[][] CircularStraights =
+		{
+		new[] {10, 11, 12, 13, 14}, // 10-J-Q-K-A
+        new[] {11, 12, 13, 14, 2},  // J-Q-K-A-2
+        new[] {12, 13, 14, 2, 3}    // Q-K-A-2-3
+		};
+
+		foreach( var straight in CircularStraights )
+		{
+			if( straight.All( rank => rankDict.ContainsKey( (Rank)rank ) ) )
+				return true;
+		}
+		return false;
 	}
 }
