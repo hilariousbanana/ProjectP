@@ -48,27 +48,62 @@ public partial class HandEvaluator
 
 		//1.스트레이트 플러쉬
 		if( isStraight && isFlush )
+		{
+			//Main Card
 			return HandRank.StraightFlush;
+		}
+
 		//2.포카드
 		if( quads > 0 )
+		{
+			//Main Card
+			//Kicker
 			return HandRank.FourOfAKind;
+		}
+
 		//3.풀하우스
 		if( trips > 0 && (pairs > 0 || trips > 1) )
+		{
+			//Main Card
+			//Kicker
 			return HandRank.FullHouse;
+		}
+
 		//4.플러쉬
 		if( isFlush )
+		{
+			//Main Card
 			return HandRank.Flush;
+		}
+
 		//5.스트레이트
 		if( isStraight )
+		{
+			//Main Card
 			return HandRank.Straight;
+		}
+
 		//6.트리플
 		if( trips > 0 )
+		{
+			//Main Card
+			//Kicker
 			return HandRank.ThreeOfAKind;
+		}
+
 		//7.페어
 		if( pairs == 2 )
+		{
+			//Main Card
+			//Kicker
 			return HandRank.TwoPair;
+		}
 		if( pairs == 1 )
+		{
+			//Main Card
+			//Kicker
 			return HandRank.OnePair;
+		}
 
 		return HandRank.HighCard;
 	}
@@ -100,7 +135,15 @@ public partial class HandEvaluator
 		}
 		return suitDict;
 	}
+	private static List<Card> GetKickers( Rank mainCard, List<Card> cards )
+	{
+		var kickers = new List<Card>();
+		return kickers;
+	}
+}
 
+public partial class HandEvaluator
+{ 
 	private static bool IsFlush( Dictionary<Suit, int> suitDict )
 	{
 		return suitDict.Values.Any( val => val >= 5 );
@@ -112,9 +155,9 @@ public partial class HandEvaluator
 
 		// Rank 키를 정렬하여 리스트로 변환
 		List<int> ranks = rankDict.Keys
-		.Select(rank => (int)rank)
-		.OrderBy(r => r)
-		.ToList();
+						.Select(rank => (int)rank)
+						.OrderBy(r => r)
+						.ToList();
 
 		// 연속된 숫자가 5개 이상인지 확인 (최적화된 방식)
 		int stack = 0;
@@ -139,13 +182,13 @@ public partial class HandEvaluator
 			&& rankDict.ContainsKey( Rank.Four )
 			&& rankDict.ContainsKey( Rank.Five );
 	}
-	private static bool IsCircularStraight( Dictionary <Rank, int> rankDict )
+	private static bool IsCircularStraight( Dictionary<Rank, int> rankDict )
 	{
 		int[][] CircularStraights =
 		{
-		new[] {10, 11, 12, 13, 14}, // 10-J-Q-K-A
-        new[] {11, 12, 13, 14, 2},  // J-Q-K-A-2
-        new[] {12, 13, 14, 2, 3}    // Q-K-A-2-3
+			new[] {10, 11, 12, 13, 14}, // 10-J-Q-K-A
+			new[] {11, 12, 13, 14, 2},  // J-Q-K-A-2
+			new[] {12, 13, 14, 2, 3}    // Q-K-A-2-3
 		};
 
 		foreach( var straight in CircularStraights )
