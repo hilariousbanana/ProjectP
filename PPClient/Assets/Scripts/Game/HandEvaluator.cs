@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.EventSystems;
 
 public enum HandRank
 {
@@ -23,11 +24,11 @@ public partial class HandEvaluator
 		cards.AddRange( hand.Cards );
 		cards.AddRange( board.Cards );
 
-		HandRank rank = DetermineBestHand( cards, out Rank mainCard, out List<Card> kickers );
+		HandRank rank = DetermineBestHand( cards, out Rank mainCard, out List<Rank> kickers );
 		return new HandStrength( rank, mainCard, kickers );
 	}
 
-	private static HandRank DetermineBestHand( List<Card> cards, out Rank mainCard, out List<Card> kickers )
+	private static HandRank DetermineBestHand( List<Card> cards, out Rank mainCard, out List<Rank> kickers )
 	{
 		var rankDict = GetRankCount(cards);
 		var suitDict = GetSuitCount(cards);
@@ -44,12 +45,20 @@ public partial class HandEvaluator
 		}
 
 		mainCard = Rank.Two;
-		kickers = new List<Card>();
+		kickers = new List<Rank>();
 
 		//1.스트레이트 플러쉬
 		if( isStraight && isFlush )
 		{
 			//Main Card
+			mainCard = cards.Where( card => suitDict[card.Suit] >= 5 )
+							.Select( card => card.Rank )
+							.OrderByDescending( rank => rank )
+							.First();
+
+			if( mainCard == Rank.Ace )
+				return HandRank.RoyalFlush;
+
 			return HandRank.StraightFlush;
 		}
 
@@ -57,7 +66,9 @@ public partial class HandEvaluator
 		if( quads > 0 )
 		{
 			//Main Card
+			mainCard = rankDict.First( val => val.Value == 4 ).Key;
 			//Kicker
+			kickers = GetKickers( mainCard, cards );
 			return HandRank.FourOfAKind;
 		}
 
@@ -65,7 +76,15 @@ public partial class HandEvaluator
 		if( trips > 0 && (pairs > 0 || trips > 1) )
 		{
 			//Main Card
+			Rank trip = rankDict.First( val => val.Value == 3 ).Key;
 			//Kicker
+			Rank pair = rankDict.Where( card=> card.Value >= 2 && card.Key != trip )
+								.Select( card => card.Key )
+								.OrderByDescending( rank => rank )
+								.FirstOrDefault();
+
+			mainCard = trip;
+			kickers = new List<Rank> { pair };
 			return HandRank.FullHouse;
 		}
 
@@ -73,6 +92,11 @@ public partial class HandEvaluator
 		if( isFlush )
 		{
 			//Main Card
+			mainCard = cards.Where( card => suitDict[card.Suit] >= 5 )
+							.Select( card => card.Rank )
+							.OrderByDescending( rank => rank )
+							.First();
+
 			return HandRank.Flush;
 		}
 
@@ -80,6 +104,9 @@ public partial class HandEvaluator
 		if( isStraight )
 		{
 			//Main Card
+			mainCard = cards.Select( card => card.Rank )
+							.OrderByDescending( rank => rank )
+							.First();
 			return HandRank.Straight;
 		}
 
@@ -87,7 +114,9 @@ public partial class HandEvaluator
 		if( trips > 0 )
 		{
 			//Main Card
+			mainCard = rankDict.First( val => val.Value == 3 ).Key;
 			//Kicker
+			kickers = GetKickers( mainCard, cards );
 			return HandRank.ThreeOfAKind;
 		}
 
@@ -95,13 +124,23 @@ public partial class HandEvaluator
 		if( pairs == 2 )
 		{
 			//Main Card
+			Rank topPair = rankDict.First( val => val.Value == 2 ).Key;
 			//Kicker
+			Rank pair = rankDict.Where( card=> card.Value == 2 && card.Key != topPair )
+								.Select( card => card.Key )
+								.OrderByDescending( rank => rank )
+								.FirstOrDefault();
+			mainCard = topPair;
+			kickers = new List<Rank> { pair };
 			return HandRank.TwoPair;
 		}
 		if( pairs == 1 )
 		{
 			//Main Card
+			mainCard = rankDict.First( val => val.Value == 2 ).Key;
+
 			//Kicker
+			kickers = GetKickers( mainCard, cards );
 			return HandRank.OnePair;
 		}
 
@@ -135,9 +174,9 @@ public partial class HandEvaluator
 		}
 		return suitDict;
 	}
-	private static List<Card> GetKickers( Rank mainCard, List<Card> cards )
+	private static List<Rank> GetKickers( Rank mainCard, List<Card> cards )
 	{
-		var kickers = new List<Card>();
+		var kickers = new List<Rank>();
 		return kickers;
 	}
 }
