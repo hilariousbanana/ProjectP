@@ -6,9 +6,9 @@ public class HandStrength
 {
 	public HandRank   Rank;
 	public Rank       MainCard;
-	public List<Card> Kickers;
+	public List<Rank> Kickers;
 
-	public HandStrength( HandRank rank, Rank mainCard, List<Card> kickers )
+	public HandStrength( HandRank rank, Rank mainCard, List<Rank> kickers )
 	{
 		this.Rank = rank;
 		this.MainCard = mainCard;
