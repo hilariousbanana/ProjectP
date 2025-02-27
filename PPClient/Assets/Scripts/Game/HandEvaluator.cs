@@ -118,9 +118,9 @@ public partial class HandEvaluator
 		if( pairs == 2 )
 		{
 			var sortedPairs = rankDict.Where(kvp => kvp.Value == 2)
-								  .Select(kvp => kvp.Key)
-								  .OrderByDescending(r => r)
-								  .ToList();
+									.Select(kvp => kvp.Key)
+									.OrderByDescending(r => r)
+									.ToList();
 
 			mainCard = sortedPairs.First();
 			kickers = GetKickers( sortedPairs[0], cards, sortedPairs[1] );
@@ -167,7 +167,7 @@ public partial class HandEvaluator
 	}
 	private static List<Rank> GetKickers( Rank mainCard, List<Card> cards, Rank? extraExclude = null )
 	{
-		return cards.Where( card => card.Rank != mainCard && ( extraExclude == null || card.Rank != extraExclude ) )
+		return cards.Where( card => card.Rank != mainCard && (extraExclude == null || card.Rank != extraExclude) )
 					.Select( card => card.Rank )
 					.OrderByDescending( rank => rank )
 					.ToList();
@@ -175,7 +175,7 @@ public partial class HandEvaluator
 }
 
 public partial class HandEvaluator
-{ 
+{
 	private static bool IsFlush( Dictionary<Suit, int> suitDict )
 	{
 		return suitDict.Values.Any( val => val >= 5 );
