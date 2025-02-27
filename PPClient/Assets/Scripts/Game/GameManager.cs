@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
 	private int        playerCount = 3;
 	private GameState  state = GameState.PreFlop;
 
+	public const int MAX_PLAYER_CNT = 3;
+
 	private void Start()
 	{
 		Initialize();
