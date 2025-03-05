@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 403979243815780086}
   - component: {fileID: 9048226908232818737}
   - component: {fileID: 2619268839566650322}
+  - component: {fileID: 3191382843741527474}
   m_Layer: 5
   m_Name: Img_Card
   m_TagString: Untagged
@@ -75,6 +76,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!111 &3191382843741527474
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 965338305360021581}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: d4d099b1c468d904288867b9ed72f52a, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: c286adfdb897b97449d0e069e240812f, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &7511426620740429620
 GameObject:
   m_ObjectHideFlags: 0
